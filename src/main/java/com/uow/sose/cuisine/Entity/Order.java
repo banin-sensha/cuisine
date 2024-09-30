@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Order {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int order_id;
 
     private double total_amount;
@@ -25,6 +25,4 @@ public class Order {
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
 }

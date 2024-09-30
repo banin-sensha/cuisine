@@ -3,6 +3,7 @@ package com.uow.sose.cuisine.Controller;
 import com.uow.sose.cuisine.Entity.Customer;
 import com.uow.sose.cuisine.Entity.Order;
 import com.uow.sose.cuisine.Generic.ResponseUtil;
+import com.uow.sose.cuisine.Service.CustomerService;
 import com.uow.sose.cuisine.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +20,28 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private CustomerService customerService;
+
     @PostMapping("/add")
     public ResponseEntity<Object> addOrder(@RequestBody Order orderParam) {
 
-        Order order = orderService.addOrder(orderParam);
+        Customer existingCustomer = customerService.getCustomerById(orderParam.getCustomer().getCustomer_id());
+        Order order = new Order();
 
-        if (order != null) {
-            return ResponseUtil.generateSuccessResponseWithData(order);
+        if (existingCustomer == null) {
+            return ResponseUtil.generateErrorResponse("Customer does not exist. Please provide correct customer_id", HttpStatus.BAD_REQUEST);
+        }
+        else {
+            order.setCustomer(existingCustomer);
+            order.setStatus(orderParam.getStatus());
+            order.setTotal_amount(orderParam.getTotal_amount());
+            order.setPromo_code(orderParam.getPromo_code());
+        }
+        Order newOrder = orderService.addOrder(order);
+
+        if (newOrder != null) {
+            return ResponseUtil.generateSuccessResponseWithData(newOrder);
         }
         else {
             return ResponseUtil.generateErrorResponse("Error while adding new order", HttpStatus.BAD_REQUEST);
@@ -59,7 +75,13 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOrder(@PathVariable int id) {
-        orderService.deleteOrder(id);
+    public ResponseEntity<Object> deleteOrder(@PathVariable int id) {
+
+        if (orderService.deleteOrder(id) == 0) {
+            return ResponseUtil.generateErrorResponse("Order details to be deleted not found", HttpStatus.NOT_FOUND);
+        }
+        else {
+            return ResponseUtil.generateSuccessResponseWithoutData("Successfully deleted Order details");
+        }
     }
 }

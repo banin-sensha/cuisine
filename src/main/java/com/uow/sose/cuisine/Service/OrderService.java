@@ -1,5 +1,6 @@
 package com.uow.sose.cuisine.Service;
 
+import com.uow.sose.cuisine.Entity.Customer;
 import com.uow.sose.cuisine.Entity.Order;
 import com.uow.sose.cuisine.Repository.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,17 @@ public class OrderService {
         return orderRepo.findById(id).orElse(null);
     }
 
-    public void deleteOrder(int id) {
-        orderRepo.deleteById(id);
+    public int deleteOrder(int id) {
+        Order existingOrder = orderRepo.findById(id)
+                .orElse(null);
+
+        if (existingOrder == null) {
+            return 0;
+        }
+        else {
+            orderRepo.deleteById(id);
+            return 1;
+        }
+
     }
 }

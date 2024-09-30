@@ -48,9 +48,9 @@ public class CustomerController {
     // Get a customer by ID
     @GetMapping("/{id}")
     public ResponseEntity<Object> getCustomerById(@PathVariable int id) {
-        Optional<Customer> customer = customerService.getCustomerById(id);
+        Customer customer = customerService.getCustomerById(id);
 
-        if (customer.isPresent()) {
+        if (customer != null) {
             return ResponseUtil.generateSuccessResponseWithData(customer);
         }
         else {
@@ -76,7 +76,7 @@ public class CustomerController {
     @PostMapping("/delete/{id}")
     public ResponseEntity<Object> deleteCustomer(@PathVariable int id) {
         if (customerService.deleteCustomer(id) == 0) {
-            return ResponseUtil.generateErrorResponse("Customer details to be deteleted not found", HttpStatus.NOT_FOUND);
+            return ResponseUtil.generateErrorResponse("Customer details to be deleted not found", HttpStatus.NOT_FOUND);
         }
         else {
             return ResponseUtil.generateSuccessResponseWithoutData("Successfully deleted Customer details");

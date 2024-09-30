@@ -25,8 +25,9 @@ public class CustomerService {
     }
 
     // Retrieve customer by ID
-    public Optional<Customer> getCustomerById(int id) {
-        return customerRepo.findById(id);
+    public Customer getCustomerById(int id) {
+        return customerRepo.findById(id)
+                .orElse(null);
     }
 
     // Update a customer
