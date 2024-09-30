@@ -18,9 +18,9 @@ public class ResponseUtil {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public static ResponseEntity<Object> generateSuccessResponseWithoutData() {
+    public static ResponseEntity<Object> generateSuccessResponseWithoutData(String message) {
         GenericResponse genericResponse = new GenericResponse();
-        genericResponse.setMessage("Success");
+        genericResponse.setMessage(message);
         genericResponse.setStatusCode(HttpStatus.OK.value());
 
         return new ResponseEntity<>(genericResponse, HttpStatus.OK);

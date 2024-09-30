@@ -47,19 +47,39 @@ public class CustomerController {
 
     // Get a customer by ID
     @GetMapping("/{id}")
-    public Optional<Customer> getCustomerById(@PathVariable int id) {
-        return customerService.getCustomerById(id);
+    public ResponseEntity<Object> getCustomerById(@PathVariable int id) {
+        Optional<Customer> cust = customerService.getCustomerById(id);
+
+        if (cust.isPresent()) {
+            return ResponseUtil.generateSuccessResponseWithData(cust);
+        }
+        else {
+            return ResponseUtil.generateErrorResponse("Error while fetching customer by Id", HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     // Update a customer
-    @PutMapping("/update")
-    public Customer updateCustomer(@RequestBody Customer customer) {
-        return customerService.updateCustomer(customer);
+    @PostMapping("/update")
+    public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer) {
+        Customer cust = customerService.updateCustomer(customer);
+
+        if (cust != null) {
+            return ResponseUtil.generateSuccessResponseWithData(cust);
+        }
+        else {
+            return ResponseUtil.generateErrorResponse("Customer details not found to update.", HttpStatus.NOT_FOUND);
+        }
     }
 
     // Delete a customer by ID
-    @DeleteMapping("/delete/{id}")
-    public void deleteCustomer(@PathVariable int id) {
-        customerService.deleteCustomer(id);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Object> deleteCustomer(@PathVariable int id) {
+        if (customerService.deleteCustomer(id) ==0) {
+            return ResponseUtil.generateErrorResponse("Customer details to be deteleted not found", HttpStatus.NOT_FOUND);
+        }
+        else {
+            return ResponseUtil.generateSuccessResponseWithoutData("Successfully deleted Customer details");
+        }
     }
 }

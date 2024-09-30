@@ -32,19 +32,32 @@ public class CustomerService {
     // Update a customer
     public Customer updateCustomer(Customer customer) {
         Customer existingCustomer = customerRepo.findById(customer.getCustomer_id())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElse(null);
 
-        // Modify the entity
-        existingCustomer.setName(customer.getName());
-        existingCustomer.setEmail(customer.getEmail());
-        existingCustomer.setPhone(customer.getPhone());
+        if (existingCustomer == null) {
+            return null;
+        }
+        else {
+            // Modify the entity
+            existingCustomer.setName(customer.getName());
+            existingCustomer.setEmail(customer.getEmail());
+            existingCustomer.setPhone(customer.getPhone());
 
-        // Save the updated entity
-        return customerRepo.save(existingCustomer);
+            // Save the updated entity
+            return customerRepo.save(existingCustomer);
+        }
     }
 
     // Delete customer by ID
-    public void deleteCustomer(int id) {
-        customerRepo.deleteById(id);
+    public int deleteCustomer(int id) {
+        Optional<Customer> cust = customerRepo.findById(id);
+
+        if (cust.isPresent()) {
+            customerRepo.deleteById(id);
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 }
