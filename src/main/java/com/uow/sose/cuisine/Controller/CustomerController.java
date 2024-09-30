@@ -20,11 +20,11 @@ public class CustomerController {
 
     // Add a new customer
     @PostMapping("/add")
-    public ResponseEntity<Object> addCustomer(@RequestBody Customer customer) {
-        Customer cust = customerService.addCustomer(customer);
+    public ResponseEntity<Object> addCustomer(@RequestBody Customer customerParam) {
+        Customer customer = customerService.addCustomer(customerParam);
 
-        if (cust != null) {
-            return ResponseUtil.generateSuccessResponseWithData(cust);
+        if (customer != null) {
+            return ResponseUtil.generateSuccessResponseWithData(customer);
         }
         else {
             return ResponseUtil.generateErrorResponse("Error while adding new customer", HttpStatus.BAD_REQUEST);
@@ -48,10 +48,10 @@ public class CustomerController {
     // Get a customer by ID
     @GetMapping("/{id}")
     public ResponseEntity<Object> getCustomerById(@PathVariable int id) {
-        Optional<Customer> cust = customerService.getCustomerById(id);
+        Optional<Customer> customer = customerService.getCustomerById(id);
 
-        if (cust.isPresent()) {
-            return ResponseUtil.generateSuccessResponseWithData(cust);
+        if (customer.isPresent()) {
+            return ResponseUtil.generateSuccessResponseWithData(customer);
         }
         else {
             return ResponseUtil.generateErrorResponse("Error while fetching customer by Id", HttpStatus.BAD_REQUEST);
@@ -61,11 +61,11 @@ public class CustomerController {
 
     // Update a customer
     @PostMapping("/update")
-    public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer) {
-        Customer cust = customerService.updateCustomer(customer);
+    public ResponseEntity<Object> updateCustomer(@RequestBody Customer customerParam) {
+        Customer customer = customerService.updateCustomer(customerParam);
 
-        if (cust != null) {
-            return ResponseUtil.generateSuccessResponseWithData(cust);
+        if (customer != null) {
+            return ResponseUtil.generateSuccessResponseWithData(customer);
         }
         else {
             return ResponseUtil.generateErrorResponse("Customer details not found to update.", HttpStatus.NOT_FOUND);
@@ -75,7 +75,7 @@ public class CustomerController {
     // Delete a customer by ID
     @PostMapping("/delete/{id}")
     public ResponseEntity<Object> deleteCustomer(@PathVariable int id) {
-        if (customerService.deleteCustomer(id) ==0) {
+        if (customerService.deleteCustomer(id) == 0) {
             return ResponseUtil.generateErrorResponse("Customer details to be deteleted not found", HttpStatus.NOT_FOUND);
         }
         else {
