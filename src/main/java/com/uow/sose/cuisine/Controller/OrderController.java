@@ -70,11 +70,23 @@ public class OrderController {
             return ResponseUtil.generateSuccessResponseWithData(order);
         }
         else {
-            return ResponseUtil.generateErrorResponse("Error while fetching order by Id", HttpStatus.BAD_REQUEST);
+            return ResponseUtil.generateErrorResponse("Error while fetching specific order details", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/update")
+    public ResponseEntity<Object> updateCustomer(@RequestBody Order orderParam) {
+        Order order = orderService.updateOrder(orderParam);
+
+        if (order != null) {
+            return ResponseUtil.generateSuccessResponseWithData(order);
+        }
+        else {
+            return ResponseUtil.generateErrorResponse("Order details to be updated not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("delete/{id}")
     public ResponseEntity<Object> deleteOrder(@PathVariable int id) {
 
         if (orderService.deleteOrder(id) == 0) {

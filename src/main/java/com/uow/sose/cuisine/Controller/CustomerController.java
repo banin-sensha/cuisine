@@ -37,7 +37,7 @@ public class CustomerController {
         List<Customer> allCustomers = customerService.getAllCustomers();
 
         if (allCustomers.isEmpty()) {
-            return ResponseUtil.generateErrorResponse("Customer is not registered yet", HttpStatus.NOT_FOUND);
+            return ResponseUtil.generateErrorResponse("Error while fetching all customer details", HttpStatus.BAD_REQUEST);
         }
         else {
             return ResponseUtil.generateSuccessResponseWithData(allCustomers);
@@ -54,7 +54,7 @@ public class CustomerController {
             return ResponseUtil.generateSuccessResponseWithData(customer);
         }
         else {
-            return ResponseUtil.generateErrorResponse("Error while fetching customer by Id", HttpStatus.BAD_REQUEST);
+            return ResponseUtil.generateErrorResponse("Error while fetching specific customer details", HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -68,7 +68,7 @@ public class CustomerController {
             return ResponseUtil.generateSuccessResponseWithData(customer);
         }
         else {
-            return ResponseUtil.generateErrorResponse("Customer details not found to update.", HttpStatus.NOT_FOUND);
+            return ResponseUtil.generateErrorResponse("Customer details to be udpated not found", HttpStatus.NOT_FOUND);
         }
     }
 
