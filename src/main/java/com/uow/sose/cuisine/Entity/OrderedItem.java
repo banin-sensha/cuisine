@@ -14,6 +14,8 @@ public class OrderedItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int om_id;
+
     private int order_id;
     private int item_id;
 }

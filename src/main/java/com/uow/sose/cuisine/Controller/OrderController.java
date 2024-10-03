@@ -3,9 +3,11 @@ package com.uow.sose.cuisine.Controller;
 import com.uow.sose.cuisine.Entity.Customer;
 import com.uow.sose.cuisine.Entity.MenuItem;
 import com.uow.sose.cuisine.Entity.Order;
+import com.uow.sose.cuisine.Entity.OrderedItem;
 import com.uow.sose.cuisine.Generic.ResponseUtil;
 import com.uow.sose.cuisine.Service.CustomerService;
 import com.uow.sose.cuisine.Service.OrderService;
+import com.uow.sose.cuisine.Service.OrderedItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,9 @@ public class OrderController {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private OrderedItemService orderedItemService;
+
     @PostMapping("/add")
     public ResponseEntity<Object> addOrder(@RequestBody Order orderParam) {
 
@@ -44,6 +49,21 @@ public class OrderController {
         Order newOrder = orderService.addOrder(order);
 
         if (newOrder != null) {
+
+            List<HashMap<String, Object>> itemIdList = orderParam.getMenuItems();
+            for (HashMap<String, Object> map: itemIdList) {
+                OrderedItem orderedItem = new OrderedItem();
+                orderedItem.setOrder_id(newOrder.getOrder_id());
+                orderedItem.setItem_id(Integer.parseInt(map.get("id").toString()));
+                orderedItemService.add(orderedItem);
+            }
+            List<HashMap<String, Object>> menuItems = orderService.findMenuItemsByOrderId(newOrder.getOrder_id());
+            if (!menuItems.isEmpty()) {
+                order.setMenuItems(menuItems);
+            }
+            else {
+                order.setMenuItems(Collections.emptyList());
+            }
             return ResponseUtil.generateSuccessResponseWithData(newOrder);
         }
         else {
