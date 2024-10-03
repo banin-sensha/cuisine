@@ -1,6 +1,7 @@
 package com.uow.sose.cuisine.Controller;
 
 import com.uow.sose.cuisine.Entity.Customer;
+import com.uow.sose.cuisine.Entity.MenuItem;
 import com.uow.sose.cuisine.Entity.Order;
 import com.uow.sose.cuisine.Generic.ResponseUtil;
 import com.uow.sose.cuisine.Service.CustomerService;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,6 +60,15 @@ public class OrderController {
             return ResponseUtil.generateErrorResponse("Order is not placed yet", HttpStatus.NOT_FOUND);
         }
         else {
+            for(Order order: allOrders) {
+                List<HashMap<String, Object>> menuItems = orderService.findMenuItemsByOrderId(order.getOrder_id());
+                if (!menuItems.isEmpty()) {
+                    order.setMenuItems(menuItems);
+                }
+                else {
+                    order.setMenuItems(Collections.emptyList());
+                }
+            }
             return ResponseUtil.generateSuccessResponseWithData(allOrders);
         }
     }
@@ -67,6 +79,13 @@ public class OrderController {
         Order order = orderService.getOrderById(id);
 
         if (order != null) {
+            List<HashMap<String, Object>> menuItems = orderService.findMenuItemsByOrderId(id);
+            if (!menuItems.isEmpty()) {
+                order.setMenuItems(menuItems);
+            }
+            else {
+                order.setMenuItems(Collections.emptyList());
+            }
             return ResponseUtil.generateSuccessResponseWithData(order);
         }
         else {

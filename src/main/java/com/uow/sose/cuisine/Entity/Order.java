@@ -1,10 +1,13 @@
 package com.uow.sose.cuisine.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,6 +23,8 @@ public class Order {
     private double total_amount;
     private String status;
     private String promo_code;
+
+    List<HashMap<String, Object>> menuItems;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
