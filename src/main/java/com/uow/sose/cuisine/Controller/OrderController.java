@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/order")
@@ -95,5 +95,12 @@ public class OrderController {
         else {
             return ResponseUtil.generateSuccessResponseWithoutData("Successfully deleted Order details");
         }
+    }
+
+    @GetMapping("/menu/{id}")
+    public ResponseEntity<Object> getMenu(@PathVariable int id) {
+        List<HashMap<String, Object>> menuItemsByOrderId = orderService.findMenuItemsByOrderId(id);
+        return ResponseUtil.generateSuccessResponseWithData(menuItemsByOrderId);
+
     }
 }

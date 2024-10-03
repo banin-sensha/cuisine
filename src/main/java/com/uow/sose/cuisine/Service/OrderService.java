@@ -1,6 +1,7 @@
 package com.uow.sose.cuisine.Service;
 
 import com.uow.sose.cuisine.Entity.Customer;
+import com.uow.sose.cuisine.Entity.MenuItem;
 import com.uow.sose.cuisine.Entity.Order;
 import com.uow.sose.cuisine.Generic.ResponseUtil;
 import com.uow.sose.cuisine.Repository.OrderRepo;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -65,4 +67,9 @@ public class OrderService {
         }
 
     }
+
+    public List<HashMap<String, Object>> findMenuItemsByOrderId(int orderId) {
+        return orderRepo.findMenuItemsByOrderId(orderId);
+    }
+
 }
