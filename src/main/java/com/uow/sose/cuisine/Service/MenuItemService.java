@@ -1,5 +1,6 @@
 package com.uow.sose.cuisine.Service;
 
+import com.uow.sose.cuisine.Entity.Customer;
 import com.uow.sose.cuisine.Entity.MenuItem;
 import com.uow.sose.cuisine.Repository.MenuItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,37 @@ public class MenuItemService {
         return menuItemRepo.findAll();
     }
 
-    public Optional<MenuItem> getMenuItemById(int id) {
-        return menuItemRepo.findById(id);
+    public MenuItem getMenuItemById(int id) {
+        return menuItemRepo.findById(id).orElse(null);
     }
 
     public MenuItem updateMenuItem(MenuItem menuItem) {
-        return menuItemRepo.save(menuItem);
+        MenuItem existingMenuItem = menuItemRepo.findById(menuItem.getItem_id())
+                .orElse(null);
+
+        if (existingMenuItem == null) {
+            return null;
+        }
+        else {
+            // Modify the entity
+            existingMenuItem.setName(menuItem.getName());
+            existingMenuItem.setPrice(menuItem.getPrice());
+            existingMenuItem.setAvailability(menuItem.isAvailability());
+
+            // Save the updated entity
+            return menuItemRepo.save(existingMenuItem);
+        }
     }
 
-    public void deleteMenuItem(int id) {
-        menuItemRepo.deleteById(id);
+    public int deleteMenuItem(int id) {
+        MenuItem menuItem = menuItemRepo.findById(id).orElse(null);
+
+        if (menuItem == null) {
+            return 0;
+        }
+        else {
+            menuItemRepo.deleteById(id);
+            return 1;
+        }
     }
 }
