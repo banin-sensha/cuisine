@@ -67,7 +67,7 @@ public class MenuItemController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable int id) {
         if (menuItemService.deleteMenuItem(id) == 0) {
             return ResponseUtil.generateErrorResponse("Menu item details to be deleted not found", HttpStatus.NOT_FOUND);

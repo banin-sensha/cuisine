@@ -81,7 +81,7 @@ public class OrderController {
         List<Order> allOrders = orderService.getAllOrders();
 
         if (allOrders.isEmpty()) {
-            return ResponseUtil.generateErrorResponse("Order is not placed yet", HttpStatus.NOT_FOUND);
+            return ResponseUtil.generateErrorResponse("Error while fetching all orders", HttpStatus.BAD_REQUEST);
         }
         else {
             for(Order order: allOrders) {
@@ -146,7 +146,7 @@ public class OrderController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Object> updateCustomer(@RequestBody Order orderParam) {
+    public ResponseEntity<Object> updateOrder(@RequestBody Order orderParam) {
         Order order = orderService.updateOrder(orderParam);
 
         if (order != null) {

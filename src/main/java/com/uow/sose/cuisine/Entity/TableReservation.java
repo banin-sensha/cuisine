@@ -1,5 +1,6 @@
 package com.uow.sose.cuisine.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,4 +21,5 @@ public class TableReservation {
     private int table_number;
     private int number_of_guests;
     private String reservation_time;
+    private String status;
 }
