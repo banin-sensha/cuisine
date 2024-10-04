@@ -31,8 +31,8 @@ public class OrderController {
     @Autowired
     private OrderedItemService orderedItemService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Object> addOrder(@RequestBody Order orderParam) {
+    @PostMapping("/place")
+    public ResponseEntity<Object> placeOrder(@RequestBody Order orderParam) {
 
         Customer existingCustomer = customerService.getCustomerById(orderParam.getCustomer().getCustomer_id());
         Order order = new Order();
@@ -43,7 +43,6 @@ public class OrderController {
         else {
             order.setCustomer(existingCustomer);
             order.setStatus(orderParam.getStatus());
-            order.setTotal_amount(orderParam.getTotal_amount());
             order.setPromo_code(orderParam.getPromo_code());
         }
         Order newOrder = orderService.addOrder(order);
@@ -60,6 +59,11 @@ public class OrderController {
             List<HashMap<String, Object>> menuItems = orderService.findMenuItemsByOrderId(newOrder.getOrder_id());
             if (!menuItems.isEmpty()) {
                 order.setMenuItems(menuItems);
+                double totalAmount = 0.0;
+                for (HashMap<String, Object> item: menuItems) {
+                    totalAmount = totalAmount + Double.parseDouble(item.get("price").toString());
+                }
+                order.setTotal_amount(Double.parseDouble(String.format("%.2f", totalAmount)));
             }
             else {
                 order.setMenuItems(Collections.emptyList());
@@ -113,6 +117,34 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<Object> getOrderByCustomerId(@PathVariable int customerId) {
+
+        List<Order> orderList = orderService.getOrdersByCustomerId(customerId);
+
+        if (!orderList.isEmpty()) {
+            for (Order order: orderList) {
+                List<HashMap<String, Object>> menuItems = orderService.findMenuItemsByOrderId(order.getOrder_id());
+                if (!menuItems.isEmpty()) {
+                    order.setMenuItems(menuItems);
+                    double totalAmount = 0.0;
+                    for (HashMap<String, Object> item: menuItems) {
+                        totalAmount = totalAmount + Double.parseDouble(item.get("price").toString());
+                    }
+                    order.setTotal_amount(Double.parseDouble(String.format("%.2f", totalAmount)));
+                }
+                else {
+                    order.setMenuItems(Collections.emptyList());
+                }
+            }
+
+            return ResponseUtil.generateSuccessResponseWithData(orderList);
+        }
+        else {
+            return ResponseUtil.generateErrorResponse("Error while fetching specific order details", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/update")
     public ResponseEntity<Object> updateCustomer(@RequestBody Order orderParam) {
         Order order = orderService.updateOrder(orderParam);
@@ -134,12 +166,5 @@ public class OrderController {
         else {
             return ResponseUtil.generateSuccessResponseWithoutData("Successfully deleted Order details");
         }
-    }
-
-    @GetMapping("/menu/{id}")
-    public ResponseEntity<Object> getMenu(@PathVariable int id) {
-        List<HashMap<String, Object>> menuItemsByOrderId = orderService.findMenuItemsByOrderId(id);
-        return ResponseUtil.generateSuccessResponseWithData(menuItemsByOrderId);
-
     }
 }

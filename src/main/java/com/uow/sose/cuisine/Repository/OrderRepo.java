@@ -18,4 +18,7 @@ public interface OrderRepo extends JpaRepository<Order, Integer> {
             "AND OI.item_id = MI.item_id")
     List<HashMap<String, Object>> findMenuItemsByOrderId(@Param("orderId") int orderId);
 
+    @Query("SELECT o FROM Order o WHERE o.customer.customer_id = :customerId")
+    List<Order> findAllOrdersByCustomerId(int customerId);
+
 }

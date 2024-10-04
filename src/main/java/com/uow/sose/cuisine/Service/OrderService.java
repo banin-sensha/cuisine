@@ -72,4 +72,8 @@ public class OrderService {
         return orderRepo.findMenuItemsByOrderId(orderId);
     }
 
+    public List<Order> getOrdersByCustomerId(int customerId) {
+        return orderRepo.findAllOrdersByCustomerId(customerId);
+    }
+
 }
