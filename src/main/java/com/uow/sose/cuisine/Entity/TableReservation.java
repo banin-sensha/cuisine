@@ -1,10 +1,7 @@
 package com.uow.sose.cuisine.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +17,8 @@ public class TableReservation {
     private int reservation_id;
     private int table_number;
     private int number_of_guests;
+    private int customer_id;
     private String reservation_time;
     private String status;
+
 }
